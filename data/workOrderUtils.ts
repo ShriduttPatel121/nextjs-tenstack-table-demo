@@ -1,11 +1,21 @@
 import fsPromise from "fs/promises";
-import { faker } from '@faker-js/faker'
+import { faker } from '@faker-js/faker';
 
-export enum ScheduleENUM {
+enum WeekDayEnum {
+    SUNDAY = "SUNDAY",
+    MONDAY = "MONDAY",
+    TUESDAY = "TUESDAY",
+    WEDNESDAY = "WEDNESDAY",
+    THURSDAY = "THURSDAY",
+    FRIDAY = "FRIDAY",
+    SATURDAY = "SATURDAY",
+}
+
+enum ScheduleENUM {
     WEEKLY = "WEEKLY",
     MONTHLY = "MONTHLY",
     YEARLY = "YEARLY",
-    NO_REPEAT = "NO_REPEAT",
+    NO_REPEAT = "NO REPEAT",
     CUSTOM = "CUSTOM"
 }
 
@@ -19,9 +29,11 @@ enum OrderTypeEnum {
 type TSchedule = {
     type: ScheduleENUM,
     date: Date,
+    onTime: boolean,
+    scheduleDays: WeekDayEnum[]
 }
 
-export type TWorkOrder = {
+type TWorkOrder = {
     id: string;
     workOrder: string;
     customerName: string;
@@ -34,6 +46,8 @@ function generateSchedule(): TSchedule {
     return {
         type: faker.helpers.arrayElement(Object.values(ScheduleENUM)),
         date: faker.date.future(),
+        onTime: faker.helpers.arrayElement([true, false, true]),
+        scheduleDays: faker.helpers.arrayElements(Object.values(WeekDayEnum), { max: 5, min: 1 }) as WeekDayEnum[]
     };
 }
 
@@ -41,7 +55,7 @@ function generateSchedule(): TSchedule {
 function generateWorkOrder(): TWorkOrder {
     return {
         id: faker.string.uuid(),
-        workOrder: `#${faker.number.int({ min: 1000, max: 9999 })}: ${faker.helpers.arrayElement(Object.values(OrderTypeEnum))}`,
+        workOrder: `# ${faker.number.int({ min: 1000, max: 9999 })}: ${faker.helpers.arrayElement(Object.values(OrderTypeEnum))}`,
         customerName: faker.person.fullName(),
         serviceAddress: faker.location.streetAddress(),
         assignee: faker.person.fullName(),
@@ -49,7 +63,7 @@ function generateWorkOrder(): TWorkOrder {
     };
 }
 
-export function generateWorkOrders(totalOrders: number) {
+function generateWorkOrders(totalOrders: number) {
     const workOrders: TWorkOrder[] = [];
     for (let i = 0; i < totalOrders; i++) {
         workOrders.push(generateWorkOrder());
@@ -57,4 +71,4 @@ export function generateWorkOrders(totalOrders: number) {
     return workOrders;
 }
 
-
+export { generateWorkOrders, type TWorkOrder, ScheduleENUM, type TSchedule, WeekDayEnum };
