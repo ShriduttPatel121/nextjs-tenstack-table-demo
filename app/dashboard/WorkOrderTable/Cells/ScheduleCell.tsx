@@ -3,7 +3,7 @@ import { format } from 'date-fns-tz';
 
 const weekDayArr = Object.values(WeekDayEnum);
 
-export function ScheduleCell({ date, type, onTime, scheduleDays }: TSchedule) {
+export function ScheduleCell({ date, onTime, scheduleDays }: TSchedule) {
   if (!onTime)
     return (
       <div className="badge badge-ghost text-xs font-semibold">Unscheduled</div>
@@ -21,7 +21,7 @@ export function ScheduleCell({ date, type, onTime, scheduleDays }: TSchedule) {
             {weekDayArr.map((day, i) => (
                 <span
                 key={i}
-                className={`badge-ghost flex h-7 w-7 items-center justify-center rounded-full p-2 text-xs text-gray-900 ${
+                className={`badge-ghost flex h-5 w-5 items-center justify-center rounded-full p-2 text-xs text-gray-900 ${
                     scheduleDays.includes(day) ? 'bg-sky-600 text-white' : ''
                 }`}
                 >
@@ -30,20 +30,6 @@ export function ScheduleCell({ date, type, onTime, scheduleDays }: TSchedule) {
             ))}
         </div>
       </div>
-      {/* {type === ScheduleENUM.WEEKLY && (
-        <div className="flex grow gap-4">
-          {weekDayArr.map((day, i) => (
-            <span
-              key={i}
-              className={`badge-ghost flex h-7 w-7 items-center justify-center rounded-full p-2 text-xs text-gray-900 ${
-                scheduleDays.includes(day) ? 'bg-sky-600 text-white' : ''
-              }`}
-            >
-              {day.substring(0, 1)}
-            </span>
-          ))}
-        </div>
-      )} */}
     </div>
   );
 }

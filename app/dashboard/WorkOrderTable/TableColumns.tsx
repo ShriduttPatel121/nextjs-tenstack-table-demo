@@ -2,10 +2,8 @@ import { type TWorkOrder } from "@/data/workOrderUtils";
 
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table';
 
-import { format } from 'date-fns-tz';
-
 import { CalendarDaysIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline"
-import { ScheduleCell } from "./ScheduleCell";
+import { ScheduleCell } from "./Cells/ScheduleCell";
 
 const columnHelper = createColumnHelper<TWorkOrder>();
 

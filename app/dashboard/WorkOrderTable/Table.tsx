@@ -6,19 +6,20 @@ import {
   flexRender,
   OnChangeFn,
   RowSelectionState,
+  PaginationState,
 } from '@tanstack/react-table';
 
 import { ChevronDownIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
 
 //TODO 
-interface TableProps {
+interface WorkOrderTableProp {
   columns: ColumnDef<TWorkOrder>[];
   orders: TWorkOrder[];
   rowSelection: RowSelectionState,
   setRowSelection: OnChangeFn<RowSelectionState>,
 }
 
-export function Table({ columns, orders, rowSelection, setRowSelection }: TableProps) {
+export function Table({ columns, orders, rowSelection, setRowSelection }: WorkOrderTableProp) {
   const table = useReactTable({
     data: orders,
     columns,
@@ -30,7 +31,7 @@ export function Table({ columns, orders, rowSelection, setRowSelection }: TableP
     }
   });
   return (
-    <div className="flex max-h-[80vh] w-10/12 flex-col overflow-y-auto rounded-lg bg-white">
+    <div className="flex max-h-[80vh] w-11/12 flex-col overflow-y-auto rounded-lg bg-white">
       <div className="flex justify-between p-4 pb-5 border-b-slate-200 border-b-2">
         <div className="flex gap-6 justify-start">
           <label className="input input-bordered flex items-center gap-2">
@@ -93,6 +94,9 @@ export function Table({ columns, orders, rowSelection, setRowSelection }: TableP
           })}
         </tbody>
       </table>
+      <div className="flex justify-between p-4 pb-5 border-b-slate-200 border-t-2">
+
+      </div>
     </div>
   );
 }
