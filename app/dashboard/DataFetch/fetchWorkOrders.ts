@@ -9,7 +9,7 @@ async function getPaginatedWorkOrders(pagination: PaginationState): Promise<{ or
             'Content-Type': 'application/json'
         },
         next: {
-            revalidate: 0
+            revalidate: 1000
         }
     });
 
@@ -19,8 +19,9 @@ async function getPaginatedWorkOrders(pagination: PaginationState): Promise<{ or
         throw new Error(data);
     }
 
-    console.log("data", data );
     return data;
-}
+};
 
-export { getPaginatedWorkOrders }
+const DEFAULT_PAGE_SIZE = 10;
+
+export { getPaginatedWorkOrders, DEFAULT_PAGE_SIZE }

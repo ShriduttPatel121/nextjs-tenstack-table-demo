@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { TWorkOrder } from '@/data/workOrderUtils';
 import {
   type ColumnDef,
@@ -10,74 +10,123 @@ import {
   PaginationState,
 } from '@tanstack/react-table';
 
-import { ChevronDownIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useState }  from "react";
+import {
+  ChevronDownIcon,
+  AdjustmentsHorizontalIcon,
+  MagnifyingGlassIcon,
+} from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
-import { columns } from "@/app/dashboard/WorkOrderTable/TableColumns";
+import { columns } from '@/app/dashboard/WorkOrderTable/TableColumns';
 
-import { getPaginatedWorkOrders } from '@/app/dashboard/DataFetch/fetchWorkOrders';
+import {
+  DEFAULT_PAGE_SIZE,
+  getPaginatedWorkOrders,
+} from '@/app/dashboard/DataFetch/fetchWorkOrders';
 interface WorkOrderTableProp {
   initOrders: TWorkOrder[];
-  initTotalCount: number,
-  initPaginationState: PaginationState
+  initTotalCount: number;
+  initPaginationState: PaginationState;
 }
 
-export function Table({ initOrders, initTotalCount, initPaginationState }: WorkOrderTableProp) {
-
+export function Table({
+  initOrders,
+  initTotalCount,
+  initPaginationState,
+}: WorkOrderTableProp) {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const [pagination, setPagination] = useState<PaginationState>(initPaginationState);
+  const [pagination, setPagination] =
+    useState<PaginationState>(initPaginationState);
   const [rowCount, setRowCount] = useState<number>(initTotalCount);
+  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
   const [orderRows, setOrderRows] = useState<TWorkOrder[]>(initOrders);
 
   const table = useReactTable({
     data: orderRows,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getRowId: row => row.id,
+    getRowId: (row) => row.id,
     onRowSelectionChange: setRowSelection as OnChangeFn<RowSelectionState>,
     state: {
       rowSelection,
-
+      pagination,
     },
+    rowCount: rowCount,
     manualPagination: true,
+    onPaginationChange: setPagination
   });
+
+  const handleNextPage = async () => {
+    table.nextPage();
+    //TODO: below code could get out of sync
+    const { orders, totalCount } = await getPaginatedWorkOrders({ ...pagination, pageIndex: pagination.pageIndex + 1});
+    setOrderRows(orders);
+    setRowCount(totalCount);
+  }
+
+  const handlePreviousPage = async () => {
+    table.previousPage();
+    //TODO: below code could get out of sync
+    const { orders, totalCount } = await getPaginatedWorkOrders({ ...pagination, pageIndex: pagination.pageIndex - 1});
+    setOrderRows(orders);
+    setRowCount(totalCount);
+  }
+
   return (
     <div className="flex max-h-[80vh] w-11/12 flex-col overflow-y-auto rounded-lg bg-white">
-      <div className="flex justify-between p-4 pb-5 border-b-slate-200 border-b-2">
-        <div className="flex gap-6 justify-start">
+      <div className="flex justify-between border-b-2 border-b-slate-200 p-4 pb-5">
+        <div className="flex justify-start gap-6">
           <label className="input input-bordered flex items-center gap-2">
-            <MagnifyingGlassIcon className='w-6 h-6' />
-            <input type="text" style={{outline: 'none', borderWidth: "0"}} className=" grow focus:border-gray-300 focus:ring-0" />
+            <MagnifyingGlassIcon className="h-6 w-6" />
+            <input
+              type="text"
+              style={{ outline: 'none', borderWidth: '0' }}
+              className=" grow focus:border-gray-300 focus:ring-0"
+            />
           </label>
-          <button className='inline-flex w-36 items-center text-blue-900 border border-gray-500 rounded-lg px-4 bg-white text-sm font-medium focus:outline-none'>
-            <AdjustmentsHorizontalIcon className='h-6 w-6' />
-            <span className='tracking-normal font-semibold text-base w-9/12'>
-                Filter
+          <button className="inline-flex w-36 items-center rounded-lg border border-gray-500 bg-white px-4 text-sm font-medium text-blue-900 focus:outline-none">
+            <AdjustmentsHorizontalIcon className="h-6 w-6" />
+            <span className="w-9/12 text-base font-semibold tracking-normal">
+              Filter
             </span>
           </button>
         </div>
 
         <div className="dropdown">
-        <div tabIndex={0} role="button" className='inline-flex h-full w-48 items-center border border-gray-500 rounded-lg px-4 bg-white text-sm font-medium text-gray-700 focus:outline-none'>
-            <span className='tracking-normal font-semibold text-base w-9/12'>
-                Bulk action
+          <div
+            tabIndex={0}
+            role="button"
+            className="inline-flex h-full w-48 items-center rounded-lg border border-gray-500 bg-white px-4 text-sm font-medium text-gray-700 focus:outline-none"
+          >
+            <span className="w-9/12 text-base font-semibold tracking-normal">
+              Bulk action
             </span>
-            <span className="border-l mx-2 border-gray-300 h-full" />
-            <ChevronDownIcon className="h-6 w-6 ml-2 font-bold" />
-        </div>
-          <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-            <li className='text-base font-semibold text-red-500'><a>Delete</a></li>
-            <li className='text-base font-semibold'><a>Update</a></li>
+            <span className="mx-2 h-full border-l border-gray-300" />
+            <ChevronDownIcon className="ml-2 h-6 w-6 font-bold" />
+          </div>
+          <ul
+            tabIndex={0}
+            className="menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow"
+          >
+            <li className="text-base font-semibold text-red-500">
+              <a>Delete</a>
+            </li>
+            <li className="text-base font-semibold">
+              <a>Update</a>
+            </li>
           </ul>
         </div>
       </div>
       <table className="table">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr className='border-b-2' key={headerGroup.id}>
+            <tr className="border-b-2" key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <th className="p-2 text-base font-semibold uppercase" key={header.id}>
+                <th
+                  className="p-2 text-base font-semibold uppercase"
+                  key={header.id}
+                >
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext(),
@@ -106,8 +155,29 @@ export function Table({ initOrders, initTotalCount, initPaginationState }: WorkO
           })}
         </tbody>
       </table>
-      <div className="flex justify-between p-4 pb-5 border-b-slate-200 border-t-2">
+      <div className="flex justify-between border-t-2 border-b-slate-200 p-4 pb-5">
+        <p className="text-sm text-slate-700">
+          Showing <b>{pagination.pageIndex * pageSize + 1}</b> to{' '}
+          <b>{(pagination.pageIndex + 1) * pageSize}</b> of{' '}
+          <b>{table.getRowCount()}</b> result.
+        </p>
 
+        <div className='join'>
+          <button onClick={handlePreviousPage} disabled={!table.getCanPreviousPage()} className='join-item btn'>«</button>
+          {/* {
+            Array.from({ length: 7 }).map((_, i) => {
+
+              return (
+              <button
+                key={i}
+                className={`join-item btn`}
+              >
+                {i + 1}
+              </button>)
+            })
+          } */}
+          <button onClick={handleNextPage} disabled={!table.getCanNextPage()} className='join-item btn'>»</button>
+        </div>
       </div>
     </div>
   );
