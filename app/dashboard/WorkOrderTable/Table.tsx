@@ -23,6 +23,8 @@ import {
   DEFAULT_PAGE_SIZE,
   getPaginatedWorkOrders,
 } from '@/app/dashboard/DataFetch/fetchWorkOrders';
+
+import Pagination from './Pagination';
 interface WorkOrderTableProp {
   initOrders: TWorkOrder[];
   initTotalCount: number;
@@ -69,6 +71,15 @@ export function Table({
     table.previousPage();
     //TODO: below code could get out of sync
     const { orders, totalCount } = await getPaginatedWorkOrders({ ...pagination, pageIndex: pagination.pageIndex - 1});
+    setOrderRows(orders);
+    setRowCount(totalCount);
+  }
+
+  const handlePageChange = async (pageIndex: number) => {
+    console.log("PageIndex: ", pageIndex);
+    table.setPageIndex(pageIndex);
+
+    const { orders, totalCount } = await getPaginatedWorkOrders({ ...pagination, pageIndex});
     setOrderRows(orders);
     setRowCount(totalCount);
   }
@@ -176,6 +187,7 @@ export function Table({
               </button>)
             })
           } */}
+          <Pagination activeClass='bg-blue-500 border-blue' currentPage={pagination.pageIndex} totalPages={table.getPageCount()} onPageChange={handlePageChange} />
           <button onClick={handleNextPage} disabled={!table.getCanNextPage()} className='join-item btn'>»</button>
         </div>
       </div>
