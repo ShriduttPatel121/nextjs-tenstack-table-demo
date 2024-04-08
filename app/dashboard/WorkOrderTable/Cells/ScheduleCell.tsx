@@ -12,7 +12,7 @@ export function ScheduleCell({ date, onTime, scheduleDays }: TSchedule) {
   return (
     <div className="flex gap-2 text-xs items-center">
       <span>
-        {format(date, 'MMM d, HH:mm a  ') + '  '}
+        {format(new Date(date), 'MMM d, HH:mm a  ') + '  '}
       </span>
       <b className='ml-1'>On Time</b>
       <div className="mx-auto flex items-center gap-3">

@@ -1,3 +1,4 @@
+"use client"
 import { TWorkOrder } from '@/data/workOrderUtils';
 import {
   type ColumnDef,
@@ -9,26 +10,37 @@ import {
   PaginationState,
 } from '@tanstack/react-table';
 
-import { ChevronDownIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline"
+import { ChevronDownIcon, AdjustmentsHorizontalIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useState }  from "react";
 
-//TODO 
+import { columns } from "@/app/dashboard/WorkOrderTable/TableColumns";
+
+import { getPaginatedWorkOrders } from '@/app/dashboard/DataFetch/fetchWorkOrders';
 interface WorkOrderTableProp {
-  columns: ColumnDef<TWorkOrder>[];
-  orders: TWorkOrder[];
-  rowSelection: RowSelectionState,
-  setRowSelection: OnChangeFn<RowSelectionState>,
+  initOrders: TWorkOrder[];
+  initTotalCount: number,
+  initPaginationState: PaginationState
 }
 
-export function Table({ columns, orders, rowSelection, setRowSelection }: WorkOrderTableProp) {
+export function Table({ initOrders, initTotalCount, initPaginationState }: WorkOrderTableProp) {
+
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  const [pagination, setPagination] = useState<PaginationState>(initPaginationState);
+  const [rowCount, setRowCount] = useState<number>(initTotalCount);
+  const [orderRows, setOrderRows] = useState<TWorkOrder[]>(initOrders);
+
   const table = useReactTable({
-    data: orders,
+    data: orderRows,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getRowId: row => row.id,
     onRowSelectionChange: setRowSelection as OnChangeFn<RowSelectionState>,
     state: {
-      rowSelection
-    }
+      rowSelection,
+
+    },
+    manualPagination: true,
   });
   return (
     <div className="flex max-h-[80vh] w-11/12 flex-col overflow-y-auto rounded-lg bg-white">
