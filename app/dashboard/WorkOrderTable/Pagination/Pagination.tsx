@@ -1,5 +1,7 @@
 import React from 'react';
 
+import PaginationBtn from '@/app/dashboard/WorkOrderTable/Pagination/PaginationBtn';
+
 interface WorkOrderPaginationProps {
   currentPage: number;
   totalPages: number;
@@ -9,7 +11,7 @@ interface WorkOrderPaginationProps {
 
 const Pagination = ({ currentPage, totalPages, onPageChange, activeClass }: WorkOrderPaginationProps) => {
   // Calculate start and end buttons based on current page and total pages
-  let startPage = currentPage - 3;
+  let startPage =    - 3;
   let endPage = currentPage + 3;
 
   if (startPage < 1) {
@@ -32,28 +34,35 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass }: Work
 
     if (startPage > 1) {
       buttons.push(
-        <button className={`join-item btn border-slate-300 bg-slate-100 text-slate-700 font-semibold ${1 === currentPage ? activeClass : ''}`} key="first" onClick={() => onPageChange(0)}>1</button>,
-        <span className='join-item btn border-slate-300 bg-slate-100 text-slate-700 font-semibold' key="ellipsis1">...</span>
+        <PaginationBtn activeClass={activeClass} isActive={0 === currentPage} key="first" onClick={() => onPageChange(0)}>1</PaginationBtn>,
+        <PaginationBtn isActive={false} key="ellipsis1">...</PaginationBtn>
       );
     }
 
     pages.forEach(page => {
-      console.log("PAGE: ", page);
       buttons.push(
-        <button
+        <PaginationBtn
           key={page}
           onClick={() => onPageChange(page - 1)}
-          className={`join-item btn border-slate-300 bg-slate-100 text-slate-700 font-semibold ${page === currentPage ? activeClass : ''}`}
+          isActive={(page - 1) === currentPage}
+          activeClass={activeClass}
         >
           {page}
-        </button>
+        </PaginationBtn>
       );
     });
 
     if (endPage < totalPages) {
       buttons.push(
-        <button className='join-item btn border-slate-300 bg-slate-100 text-slate-700 font-semibold' key="ellipsis2">...</button >,
-        <button className={`join-item btn border-slate-300 bg-slate-100 text-slate-700 font-semibold ${totalPages === currentPage ? activeClass : ''}`} key="last" onClick={() => onPageChange(totalPages - 1)}>{totalPages}</button>
+        <PaginationBtn isActive={false} key="ellipsis2">...</PaginationBtn >,
+        <PaginationBtn 
+          isActive={(totalPages - 1) === currentPage} 
+          activeClass={activeClass} 
+          key="last" 
+          onClick={() => onPageChange(totalPages - 1)}
+        >
+          {totalPages}
+        </PaginationBtn>
       );
     }
 
