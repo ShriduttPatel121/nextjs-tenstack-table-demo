@@ -12,7 +12,6 @@ interface WorkOrderPaginationProps {
 
 const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPaginationSize = 7 }: WorkOrderPaginationProps) => {
   if(maxPaginationSize % 2  === 0) throw new Error('maxPaginationSize should be odd number');
-  
   const paginationArr: Array<{label: string, page: number}> = Array.from({ length: maxPaginationSize });
   
   if(maxPaginationSize + 1 >= totalPages) {
@@ -28,7 +27,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
       for(let i = 1; i <= maxPaginationSize - 3; i++) {
         paginationArr[i] = { label: `${i + 1}`, page: i + 1 };
       }
-      paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor(totalPages / 2) };
+      paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor((totalPages + currentPage) / 2) };
     } else if(leftPivotPoint <= (currentPage + 1)) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
       let pointer = Math.floor((maxPaginationSize - 4) / 2) * (-1); 
@@ -37,7 +36,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
          paginationArr[i] = { label: `${num}`, page: num }
          pointer++;
       }
-      paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor(totalPages / 2) };
+      paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor((totalPages + currentPage) / 2) };
   
     } else if(totalPages - (currentPage + 1) <= 5) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
