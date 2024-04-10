@@ -11,8 +11,8 @@ interface WorkOrderPaginationProps {
 }
 
 const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPaginationSize = 7 }: WorkOrderPaginationProps) => {
-  if(maxPaginationSize % 2  === 0) throw new Error('maxPaginationSize should be odd number')
-  // Calculate start and end buttons based on current page and total pages
+  if(maxPaginationSize % 2  === 0) throw new Error('maxPaginationSize should be odd number');
+  
   const paginationArr: Array<{label: string, page: number}> = Array.from({ length: maxPaginationSize });
   
   if(maxPaginationSize + 1 >= totalPages) {
@@ -33,8 +33,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
       let pointer = Math.floor((maxPaginationSize - 4) / 2) * (-1); 
       for(let i = 2; i < maxPaginationSize - 2; i++) {
-         // 7 - 4 (7) ==> 3/2 floor - 1
-         // 8 - 4 (4) ==> 
          const num = (currentPage + 1) + pointer;
          paginationArr[i] = { label: `${num}`, page: num }
          pointer++;
