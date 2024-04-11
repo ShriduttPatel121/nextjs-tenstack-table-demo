@@ -12,19 +12,21 @@ interface WorkOrderPaginationProps {
 
 const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPaginationSize = 7 }: WorkOrderPaginationProps) => {
   if(maxPaginationSize % 2  === 0) throw new Error('maxPaginationSize should be odd number');
-  const paginationArr: Array<{label: string, page: number}> = Array.from({ length: maxPaginationSize });
+  let paginationArr: Array<{label: string, page: number}> = [];
   
-  if(maxPaginationSize + 1 >= totalPages) {
+  if(maxPaginationSize >= totalPages) {
     for(let i = 0; i < totalPages; i++) {
-      paginationArr[i] = { label: `${i}`, page: i };
+      paginationArr[i] = { label: `${i + 1}`, page: i + 1 };
     }
   } else {
+    paginationArr = Array.from({length: maxPaginationSize})
     paginationArr[0] = { label: '1', page: 1 };
     paginationArr[paginationArr.length - 1] = { label: `${totalPages}`, page: totalPages };
   
     const leftPivotPoint = maxPaginationSize - 2;
     const rightPivotPoint = totalPages - maxPaginationSize + 3;
-    if(currentPage < leftPivotPoint) {
+
+    if(currentPage < leftPivotPoint) { // ... last 2 positions are filled with ..., totalPage number
       for(let i = 1; i <= maxPaginationSize - 3; i++) {
         paginationArr[i] = { label: `${i + 1}`, page: i + 1 };
       }
@@ -32,7 +34,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
     } else if(leftPivotPoint <= (currentPage + 1) && !(currentPage >= (rightPivotPoint - 1))) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
       let pointer = Math.floor((maxPaginationSize - 4) / 2) * (-1); 
-      for(let i = 2; i < maxPaginationSize - 2; i++) {
+      for(let i = 2; i < maxPaginationSize - 2; i++) { // tops 2 positions are filled with 1, ... & last 2 positions is filled with ..., totalPage number
          const num = (currentPage + 1) + pointer;
          paginationArr[i] = { label: `${num}`, page: num }
          pointer++;
@@ -42,12 +44,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
     } else if(totalPages - (currentPage + 1) <= rightPivotPoint + 1) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
       const startPoint = totalPages - maxPaginationSize;
-      for(let i = 2; i <= maxPaginationSize - 2; i++) {
+      for(let i = 2; i <= maxPaginationSize - 2; i++) { // top 2 positions are filled with 1 & ... and last 2 positions is filled with last page
         paginationArr[i] = { label: `${startPoint + i + 1}`, page: startPoint + i + 1};
       }
-      console.log(paginationArr);
     }
+
   }
+  console.log(paginationArr);
 
   return (
     <>
