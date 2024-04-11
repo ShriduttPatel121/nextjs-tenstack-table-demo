@@ -23,12 +23,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
     paginationArr[paginationArr.length - 1] = { label: `${totalPages}`, page: totalPages };
   
     const leftPivotPoint = maxPaginationSize - 2;
+    const rightPivotPoint = totalPages - maxPaginationSize + 3;
     if(currentPage < leftPivotPoint) {
       for(let i = 1; i <= maxPaginationSize - 3; i++) {
         paginationArr[i] = { label: `${i + 1}`, page: i + 1 };
       }
       paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor((totalPages + currentPage) / 2) };
-    } else if(leftPivotPoint <= (currentPage + 1)) {
+    } else if(leftPivotPoint <= (currentPage + 1) && !(currentPage >= (rightPivotPoint - 1))) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
       let pointer = Math.floor((maxPaginationSize - 4) / 2) * (-1); 
       for(let i = 2; i < maxPaginationSize - 2; i++) {
@@ -38,12 +39,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange, activeClass, maxPag
       }
       paginationArr[paginationArr.length - 2] = { label: '...', page: Math.floor((totalPages + currentPage) / 2) };
   
-    } else if(totalPages - (currentPage + 1) <= 5) {
+    } else if(totalPages - (currentPage + 1) <= rightPivotPoint + 1) {
       paginationArr[1] = { label: '...', page: Math.ceil(currentPage / 2) };
-      const startPoint = Math.min(maxPaginationSize)
-      for(let i = 2; i < maxPaginationSize - 1; i++) {
-        paginationArr[i] = { label: `${currentPage + i - 1}`, page: currentPage + i - 1 };
+      const startPoint = totalPages - maxPaginationSize;
+      for(let i = 2; i <= maxPaginationSize - 2; i++) {
+        paginationArr[i] = { label: `${startPoint + i + 1}`, page: startPoint + i + 1};
       }
+      console.log(paginationArr);
     }
   }
 
