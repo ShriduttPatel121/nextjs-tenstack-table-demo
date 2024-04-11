@@ -85,7 +85,7 @@ export function Table({
   }
 
   return (
-    <div className="flex max-h-[80vh] w-11/12 flex-col overflow-y-auto rounded-lg bg-white">
+    <div className="flex max-h-[80vh] w-full flex-col overflow-y-auto rounded-lg bg-white">
       <div className="flex justify-between border-b-2 border-b-slate-200 p-4 pb-5">
         <div className="flex justify-start gap-6">
           <label className="input input-bordered flex items-center gap-2">
