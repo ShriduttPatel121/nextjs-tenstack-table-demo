@@ -24,7 +24,7 @@ import {
   getPaginatedWorkOrders,
 } from '@/app/dashboard/DataFetch/fetchWorkOrders';
 
-import Pagination from './Pagination';
+import Pagination from "@/app/dashboard/WorkOrderTable/Pagination/Pagination";
 interface WorkOrderTableProp {
   initOrders: TWorkOrder[];
   initTotalCount: number;
@@ -166,30 +166,22 @@ export function Table({
           })}
         </tbody>
       </table>
-      <div className="flex justify-between border-t-2 border-b-slate-200 p-4 pb-5">
+      <div className="flex items-center justify-between border-t-2 border-b-slate-200 p-4 pb-5">
         <p className="text-sm text-slate-700">
           Showing <b>{pagination.pageIndex * pageSize + 1}</b> to{' '}
           <b>{(pagination.pageIndex + 1) * pageSize}</b> of{' '}
           <b>{table.getRowCount()}</b> result.
         </p>
-
-        <div className='join'>
-          <button onClick={handlePreviousPage} disabled={!table.getCanPreviousPage()} className='join-item btn'>«</button>
-          {/* {
-            Array.from({ length: 7 }).map((_, i) => {
-
-              return (
-              <button
-                key={i}
-                className={`join-item btn`}
-              >
-                {i + 1}
-              </button>)
-            })
-          } */}
-          <Pagination activeClass='bg-blue-500 border-blue' currentPage={pagination.pageIndex} totalPages={table.getPageCount()} onPageChange={handlePageChange} />
-          <button onClick={handleNextPage} disabled={!table.getCanNextPage()} className='join-item btn'>»</button>
-        </div>
+        <Pagination
+          activeClass="z-10 bg-sky-100 border-sky-700 hover:bg-sky-200 hover:border-sky-700"
+          currentPage={pagination.pageIndex}
+          totalPages={table.getPageCount()}
+          onPageChange={handlePageChange}
+          canGoNext={table.getCanNextPage()}
+          canGoPrevious={table.getCanPreviousPage()}
+          handleNextPage={handleNextPage}
+          handlePreviousPage={handlePreviousPage}
+        />
       </div>
     </div>
   );

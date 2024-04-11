@@ -11,8 +11,6 @@ if(orders.length === 0) {
 
 export async function POST(req: Request) {
     const { page, perPage } = await req.json();
-
-    console.log("Page & Per Page: ", { page, perPage });
     // return NextResponse.json(data);
     // let { page, perPage } = req.query;
     // logic for extracting records for particular page
