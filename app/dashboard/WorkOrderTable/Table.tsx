@@ -166,18 +166,22 @@ export function Table({
           })}
         </tbody>
       </table>
-      <div className="flex justify-between items-center border-t-2 border-b-slate-200 p-4 pb-5">
+      <div className="flex items-center justify-between border-t-2 border-b-slate-200 p-4 pb-5">
         <p className="text-sm text-slate-700">
           Showing <b>{pagination.pageIndex * pageSize + 1}</b> to{' '}
           <b>{(pagination.pageIndex + 1) * pageSize}</b> of{' '}
           <b>{table.getRowCount()}</b> result.
         </p>
-
-        <div className='join'>
-          <button className='join-item btn rounded-none text-slate-700 font-semibold border-slate-300 bg-white' onClick={handlePreviousPage} disabled={!table.getCanPreviousPage()}>«</button>
-          <Pagination activeClass='z-10 bg-sky-100 border-sky-700 hover:bg-sky-200 hover:border-sky-700' currentPage={pagination.pageIndex} totalPages={table.getPageCount()} onPageChange={handlePageChange} />
-          <button className='join-item btn rounded-none text-slate-700 font-semibold border-slate-300 bg-white' onClick={handleNextPage} disabled={!table.getCanNextPage()}>»</button>
-        </div>
+        <Pagination
+          activeClass="z-10 bg-sky-100 border-sky-700 hover:bg-sky-200 hover:border-sky-700"
+          currentPage={pagination.pageIndex}
+          totalPages={table.getPageCount()}
+          onPageChange={handlePageChange}
+          canGoNext={table.getCanNextPage()}
+          canGoPrevious={table.getCanPreviousPage()}
+          handleNextPage={handleNextPage}
+          handlePreviousPage={handlePreviousPage}
+        />
       </div>
     </div>
   );
