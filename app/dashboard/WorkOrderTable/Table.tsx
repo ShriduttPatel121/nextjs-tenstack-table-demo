@@ -8,6 +8,7 @@ import {
   OnChangeFn,
   RowSelectionState,
   PaginationState,
+  ColumnFiltersState
 } from '@tanstack/react-table';
 
 import {
@@ -56,6 +57,7 @@ export function Table({
     },
     rowCount: rowCount,
     manualPagination: true,
+    manualFiltering: true,
     onPaginationChange: setPagination
   });
 
@@ -85,6 +87,7 @@ export function Table({
   }
 
   return (
+    // need to add UI for filter area here and extract out the filter area
     <div className="flex max-h-[80vh] w-full flex-col overflow-y-auto rounded-lg bg-white">
       <div className="flex justify-between border-b-2 border-b-slate-200 p-4 pb-5">
         <div className="flex justify-start gap-6">
