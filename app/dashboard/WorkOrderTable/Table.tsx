@@ -26,8 +26,13 @@ import {
   topFilterOptions,
 } from '@/app/dashboard/DataFetch/fetchWorkOrders';
 
+import PageSection from "@/app/ui/PageSection";
 import Pagination from '@/app/dashboard/WorkOrderTable/Pagination/Pagination';
 import StatusFilterCard from '@/app/dashboard/StatusFilterCard';
+import IconButton from '@/app/dashboard/AppButtons/IconButton';
+import AddWorkOrderModal from "@/app/dashboard/WorkOrderModal";
+
+import { PlusIcon } from "@heroicons/react/24/outline";
 interface WorkOrderTableProp {
   initOrders: TWorkOrder[];
   initTotalCount: number;
@@ -106,9 +111,24 @@ export function Table({
     setFilterOptions(copiedFilters);
   }
 
+  const handleAddWorkOrderModal = () => {
+    (document.getElementById('my_modal_4') as HTMLDialogElement).showModal();
+  }
+
   return (
     // need to add UI for filter area here and extract out the filter area
-    <>
+    <PageSection>
+      <div className="flex justify-between items-center">
+      <h2 className="font-semibold text-4xl" >Work Orders</h2>
+            <IconButton
+                className="btn w-48 h-14 p-4 flex items-center text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
+                iconPosition="prefix"
+                icon={<PlusIcon className="w-6 h-6" />}
+                onClick={handleAddWorkOrderModal}
+            >
+                <span className="font-semibold ml-2 text-sm">Add Work Order</span>
+            </IconButton>
+      </div>
       <div className="flex gap-4 justify-between w-full py-6">
         {filterOptions.map((fil, i) => {
           return (
@@ -223,6 +243,7 @@ export function Table({
           />
         </div>
       </div>
-    </>
+      <AddWorkOrderModal mode='Add' customerName='Nathan Winnie' />
+    </PageSection>
   );
 }
