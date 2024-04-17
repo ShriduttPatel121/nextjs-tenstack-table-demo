@@ -112,7 +112,7 @@ export function Table({
   }
 
   const handleAddWorkOrderModal = () => {
-    (document.getElementById('my_modal_4') as HTMLDialogElement).showModal();
+    (document.getElementById('work-order-modal') as HTMLDialogElement).showModal();
   }
 
   return (
@@ -121,10 +121,10 @@ export function Table({
       <div className="flex justify-between items-center">
       <h2 className="font-semibold text-4xl" >Work Orders</h2>
             <IconButton
-                className="btn w-48 h-14 p-4 flex items-center text-white bg-blue-600 hover:bg-blue-500 rounded-lg"
                 iconPosition="prefix"
                 icon={<PlusIcon className="w-6 h-6" />}
                 onClick={handleAddWorkOrderModal}
+                className='bg-sky-700 hover:bg-sky-700 text-white'
             >
                 <span className="font-semibold ml-2 text-sm">Add Work Order</span>
             </IconButton>

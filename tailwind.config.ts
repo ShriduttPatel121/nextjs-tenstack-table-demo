@@ -19,6 +19,10 @@ const config: Config = {
         },
       },
     },
+    borderWidth: {
+      '0.5': '0.5px',
+      '1': '1px',
+    },
     keyframes: {
       shimmer: {
         '100%': {
