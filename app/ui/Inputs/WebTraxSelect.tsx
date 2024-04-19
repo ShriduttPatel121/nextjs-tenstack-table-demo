@@ -11,7 +11,6 @@ interface WebTraxSelectProps {
   icon?: ReactNode;
   iconPosition?: 'prefix' | 'suffix';
   name: string;
-  anchorElement?: HTMLElement | null;
 }
 
 export default function WebtraxSelect({
@@ -19,7 +18,6 @@ export default function WebtraxSelect({
   value,
   onChange,
   name,
-  anchorElement,
 }: WebTraxSelectProps) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
 
@@ -27,11 +25,9 @@ export default function WebtraxSelect({
     setShowMenu(false);
   };
   const handleShowMenu = () => {
-    setShowMenu(true);console.log("anchorElement: ", anchorElement?.clientHeight);
+    setShowMenu(true);
+  };
 
-  }
-
-  // const randomId = useMemo(() => { return Math.floor(Math.random() *1000 )}, [])
   const handleSelect = (value: string) => {
     onChange(value);
   };
@@ -40,12 +36,17 @@ export default function WebtraxSelect({
       <div className="relative inline-block text-left">
         <div
           onClick={handleShowMenu}
-          className="input input-bordered flex items-center"
-          style={{ outline: 'none', borderWidth: '0' }}
+          className="selection:border-1 input input-bordered flex items-center selection:border-slate-500"
+          tabIndex={-1}
         >
           <span className="text-sm">{value}</span>
-          <input style={{ display: 'none' }} value={value} name={name} readOnly />
-          <ChevronDownIcon className="ml-auto h-6 w-6" />
+          <input
+            style={{ display: 'none' }}
+            value={value}
+            name={name}
+            readOnly
+          />
+          <ChevronDownIcon className="ml-auto h-5 w-5" />
         </div>
         <div
           className={clsx({
@@ -60,7 +61,6 @@ export default function WebtraxSelect({
           onClick={handleRemoveFocus}
         >
           <div className="w-full py-1" role="none">
-            {/* <!-- Active: "bg-gray-100 text-gray-900", Not Active: "text-gray-700" --> */}
             {options.map((option) => (
               <a
                 key={option.key}
@@ -74,40 +74,12 @@ export default function WebtraxSelect({
             ))}
           </div>
         </div>
-        {showMenu ? (
-          <>
-            {anchorElement?.clientHeight ? (
-              <div
-                onClick={() => {
-                  handleRemoveFocus();
-                  console.log('HHHHHHH');
-                }}
-                className="fixed left-0 top-0 z-[150] h-screen w-full bg-slate-300"
-              ></div>
-            ) : (
-              <Portal>
-                <div
-                  onClick={() => {
-                    handleRemoveFocus();
-                    console.log('HHHHHHH');
-                  }}
-                  className="fixed left-0 top-0 z-[150] h-screen w-full bg-slate-300"
-                ></div>
-              </Portal>
-            )}
-          </>
-        ) : null}
-        {/* {showMenu && (
-          <Portal>
-            <div
-              onClick={() => {
-                handleRemoveFocus();
-                console.log('HHHHHHH');
-              }}
-              className="fixed left-0 top-0 z-[150] h-screen w-full bg-slate-300"
-            ></div>
-          </Portal>
-        )} */}
+        {showMenu && (
+          <div
+            onClick={handleRemoveFocus}
+            className="fixed left-0 top-0 z-[350] h-screen w-full bg-transparent"
+          ></div>
+        )}
       </div>
     </>
   );

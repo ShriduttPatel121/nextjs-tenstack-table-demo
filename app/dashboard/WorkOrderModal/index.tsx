@@ -3,6 +3,7 @@ import { HTMLAttributes, useRef, useState } from 'react';
 import IconButton from '@/app/ui/AppButtons/IconButton';
 import WebtraxInput from '@/app/ui/Inputs/WbtraxInput';
 import WebtraxSelect from '@/app/ui/Inputs/WebTraxSelect';
+import Modal from '@/app/ui/Modal';
 
 import { XMarkIcon, ChevronDownIcon, PaperClipIcon, UserGroupIcon, ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
 
@@ -18,14 +19,17 @@ const TermsOptions: SelectOptionType[] = [
   { key: 'No', value: 'NO' }
 ]
 
-interface WorkOrderModalProps extends HTMLAttributes<HTMLDialogElement> {
+interface WorkOrderModalProps extends HTMLAttributes<HTMLDivElement> {
   mode: 'Add' | 'Edit';
   customerName: string;
+  onClose: () => void;
+  isOpen: boolean;
 }
 
 export default function WorkOrderModal({
   mode,
   customerName,
+  onClose,
   ...rest
 }: WorkOrderModalProps) {
 
@@ -38,8 +42,8 @@ export default function WorkOrderModal({
   };
 
   return (
-    <dialog {...rest} id="work-order-modal" className="modal">
-      <div className="modal-box w-11/12 max-w-7xl rounded-none p-0">
+    <Modal onClose={onClose} {...rest} id="work-order-modal" >
+      <div className="w-full rounded-none p-0">
         
         <div className="flex items-center justify-between p-4 border-b-1 border-gray-300 drop-shadow-sm">
           <div>
@@ -47,7 +51,7 @@ export default function WorkOrderModal({
             <p className="text-sm text-gray-600">For {customerName}</p>
           </div>
           <div>
-            <button onClick={handleCloseDialog} className="btn btn-circle bg-transparent hover:bg-transparent border-none">
+            <button onClick={onClose} className="btn btn-circle bg-transparent hover:bg-transparent border-none">
               <XMarkIcon className="h-6 w-6 text-gray-600" />
             </button>
           </div>
@@ -110,9 +114,9 @@ export default function WorkOrderModal({
         </div>
       </div>
       {/* below form is for closing modal when user clicks in backdrop */}
-      <form method="dialog" className="modal-backdrop">
+      {/* <form method="dialog" className="modal-backdrop">
         <button>close</button>
-      </form>
-    </dialog>
+      </form> */}
+    </Modal>
   );
 }

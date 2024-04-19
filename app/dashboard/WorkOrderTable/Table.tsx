@@ -33,6 +33,7 @@ import IconButton from '@/app/ui/AppButtons/IconButton';
 import AddWorkOrderModal from "@/app/dashboard/WorkOrderModal";
 import WebtraxInput from '@/app/ui/Inputs/WbtraxInput';
 
+
 import { PlusIcon } from "@heroicons/react/24/outline";
 interface WorkOrderTableProp {
   initOrders: TWorkOrder[];
@@ -53,9 +54,7 @@ export function Table({
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
   const [orderRows, setOrderRows] = useState<TWorkOrder[]>(initOrders);
   const [filterOptions, setFilterOptions] = useState(topFilterOptions);
-
-
-  const [value, setValue] = useState<string>();
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   const table = useReactTable({
     data: orderRows,
@@ -107,17 +106,26 @@ export function Table({
   const handleFilterSelect = (selectIndx: number) => {
     const copiedFilters = [...filterOptions];
     copiedFilters.forEach((fil, i) => {
-      fil.isActive = false;
       if(i === selectIndx) {
-        fil.isActive = true
+        fil.isActive = !fil.isActive
+      } else {
+        fil.isActive = false;
       }
     });
     setFilterOptions(copiedFilters);
   }
 
-  const handleAddWorkOrderModal = () => {
-    (document.getElementById('work-order-modal') as HTMLDialogElement).showModal();
+  const handleModalClose = () =>  {
+    setShowModal(false);
   }
+
+  const handleModalOpen = () =>  {
+    setShowModal(true);
+  }
+
+  // const handleAddWorkOrderModal = () => {
+  //   (document.getElementById('work-order-modal') as HTMLDialogElement).showModal();
+  // }
 
   return (
     <PageSection>
@@ -126,7 +134,7 @@ export function Table({
             <IconButton
                 iconPosition="prefix"
                 icon={<PlusIcon className="w-6 h-6" />}
-                onClick={handleAddWorkOrderModal}
+                onClick={handleModalOpen}
                 className='h-14 w-48 bg-sky-700 hover:bg-sky-700 text-white'
             >
                 <span className="font-semibold ml-2 text-sm">Add Work Order</span>
@@ -242,7 +250,7 @@ export function Table({
           />
         </div>
       </div>
-      <AddWorkOrderModal mode='Add' customerName='Nathan Winnie' />
+      <AddWorkOrderModal onClose={handleModalClose} isOpen={showModal} mode='Add' customerName='Nathan Winnie' />
     </PageSection>
   );
 }
