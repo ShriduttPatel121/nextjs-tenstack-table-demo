@@ -29,8 +29,9 @@ import {
 import PageSection from "@/app/ui/PageSection";
 import Pagination from '@/app/dashboard/WorkOrderTable/Pagination/Pagination';
 import StatusFilterCard from '@/app/dashboard/StatusFilterCard';
-import IconButton from '@/app/dashboard/AppButtons/IconButton';
+import IconButton from '@/app/ui/AppButtons/IconButton';
 import AddWorkOrderModal from "@/app/dashboard/WorkOrderModal";
+import WebtraxInput from '@/app/ui/Inputs/WbtraxInput';
 
 import { PlusIcon } from "@heroicons/react/24/outline";
 interface WorkOrderTableProp {
@@ -51,7 +52,10 @@ export function Table({
   const [rowCount, setRowCount] = useState<number>(initTotalCount);
   const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGE_SIZE);
   const [orderRows, setOrderRows] = useState<TWorkOrder[]>(initOrders);
-  const [filterOptions, setFilterOptions] = useState(topFilterOptions)
+  const [filterOptions, setFilterOptions] = useState(topFilterOptions);
+
+
+  const [value, setValue] = useState<string>();
 
   const table = useReactTable({
     data: orderRows,
@@ -116,7 +120,6 @@ export function Table({
   }
 
   return (
-    // need to add UI for filter area here and extract out the filter area
     <PageSection>
       <div className="flex justify-between items-center">
       <h2 className="font-semibold text-4xl" >Work Orders</h2>
@@ -124,7 +127,7 @@ export function Table({
                 iconPosition="prefix"
                 icon={<PlusIcon className="w-6 h-6" />}
                 onClick={handleAddWorkOrderModal}
-                className='bg-sky-700 hover:bg-sky-700 text-white'
+                className='h-14 w-48 bg-sky-700 hover:bg-sky-700 text-white'
             >
                 <span className="font-semibold ml-2 text-sm">Add Work Order</span>
             </IconButton>
@@ -147,27 +150,23 @@ export function Table({
       <div className="flex max-h-screen w-full flex-col overflow-y-auto rounded-lg bg-white">
         <div className="flex justify-between border-b-2 border-b-slate-200 p-4 pb-5">
           <div className="flex justify-start gap-6">
-            <label className="input input-bordered flex items-center gap-2">
-              <MagnifyingGlassIcon className="h-6 w-6" />
-              <input
-                type="text"
-                style={{ outline: 'none', borderWidth: '0' }}
-                className="grow focus:border-gray-300 focus:ring-0"
-              />
-            </label>
-            <button className="inline-flex w-36 items-center rounded-lg border border-gray-500 bg-white px-4 text-sm font-medium text-blue-900 focus:outline-none">
-              <AdjustmentsHorizontalIcon className="h-6 w-6" />
-              <span className="w-9/12 text-base font-semibold tracking-normal">
-                Filter
-              </span>
-            </button>
+            <WebtraxInput className="grow h-full" icon={<MagnifyingGlassIcon className="h-6 w-6" />} iconPosition='prefix'  />
+            <IconButton
+                iconPosition="prefix"
+                icon={<AdjustmentsHorizontalIcon className="h-6 w-6" />}
+                className='w-36 h-12 border-gray-500 bg-white hover:bg-white px-2 text-sm font-medium text-blue-900'
+            >
+                 <span className="text-base font-semibold tracking-normal">
+                  Filter
+                </span>
+            </IconButton>
           </div>
 
-          <div className="dropdown">
+          <button className="dropdown">
             <div
               tabIndex={0}
               role="button"
-              className="inline-flex h-full w-48 items-center rounded-lg border border-gray-500 bg-white px-4 text-sm font-medium text-gray-700 focus:outline-none"
+              className="inline-flex h-full w-48 items-center rounded-lg border-2 border-gray-500 bg-white px-4 text-sm font-medium text-gray-700 focus:outline-none"
             >
               <span className="w-9/12 text-base font-semibold tracking-normal">
                 Bulk action
@@ -182,11 +181,11 @@ export function Table({
               <li className="text-base font-semibold text-red-500">
                 <a>Delete</a>
               </li>
-              <li className="text-base font-semibold">
+              <li tabIndex={1} className="text-base font-semibold">
                 <a>Update</a>
               </li>
             </ul>
-          </div>
+          </button>
         </div>
         <table className="table">
           <thead>
