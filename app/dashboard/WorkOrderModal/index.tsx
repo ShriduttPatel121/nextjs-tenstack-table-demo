@@ -1,36 +1,57 @@
 'use client';
-import { HTMLAttributes, useRef } from 'react';
-import IconButton from '@/app/dashboard/AppButtons/IconButton';
+import { HTMLAttributes, useRef, useState } from 'react';
+import IconButton from '@/app/ui/AppButtons/IconButton';
+import WebtraxInput from '@/app/ui/Inputs/WbtraxInput';
+import WebtraxSelect from '@/app/ui/Inputs/WebTraxSelect';
+import Modal from '@/app/ui/Modal';
 
 import { XMarkIcon, ChevronDownIcon, PaperClipIcon, UserGroupIcon, ChatBubbleBottomCenterIcon } from '@heroicons/react/24/outline';
 
-interface WorkOrderModalProps extends HTMLAttributes<HTMLDialogElement> {
+type SelectOptionType = { key: string, value: string };
+
+const WorkOrderOptions: SelectOptionType[] = [
+  { key: 'Cleaning', value: 'CLEANING' },
+  { key: 'Sweeping', value: 'SWEEPING' }
+];
+
+const TermsOptions: SelectOptionType[] = [
+  { key: 'Yes', value: 'YES' },
+  { key: 'No', value: 'NO' }
+]
+
+interface WorkOrderModalProps extends HTMLAttributes<HTMLDivElement> {
   mode: 'Add' | 'Edit';
   customerName: string;
+  onClose: () => void;
+  isOpen: boolean;
 }
 
 export default function WorkOrderModal({
   mode,
   customerName,
+  onClose,
   ...rest
 }: WorkOrderModalProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  // const dialogRef = useRef<HTMLDialogElement>(null);
+  const [workOrderType, setWorkOrderType] = useState<string>('');
+  const [termValue, setTermValue] = useState<string>('');
 
   const handleCloseDialog = () => {
-    dialogRef.current!.close();
+    // dialogRef.current!.close();
   };
 
   return (
-    <dialog {...rest} id="work-order-modal" className="modal" ref={dialogRef}>
-      <div className="modal-box w-11/12 max-w-7xl rounded-none p-0">
+    <Modal onClose={onClose} {...rest} id="work-order-modal" >
+      <div className="w-full rounded-none p-0">
         
         <div className="flex items-center justify-between p-4 border-b-1 border-gray-300 drop-shadow-sm">
           <div>
             <p className="text-lg font-semibold">{mode} Work Order</p>
-            <p className="text-sm">For {customerName}</p>
+            <p className="text-sm text-gray-600">For {customerName}</p>
           </div>
           <div>
-            <button onClick={handleCloseDialog} className="btn btn-circle bg-transparent hover:bg-transparent border-none">
+            <button onClick={onClose} className="btn btn-circle bg-transparent hover:bg-transparent border-none">
               <XMarkIcon className="h-6 w-6 text-gray-600" />
             </button>
           </div>
@@ -38,8 +59,30 @@ export default function WorkOrderModal({
         <div className="flex">
           
           <div className='grow'>
-            <div className=''>
-
+            <div className='bg-gray-100 pb-2'>
+              <div className="border-b-gray-300 drop-shadow-sm p-4 border-2">
+                <h1 className='font-bold text-lg'>Details</h1>
+              </div>
+              <div className='flex gap-1'>
+                <div className='flex justify-between p-4 basis-5/12'>
+                  <div className='flex w-full flex-col mt-3'>
+                    <p className='text-sm font-normal text mb-2'>Work Order Description<span className='text-red-600'>*</span></p>
+                    <textarea className='textarea' rows={1}></textarea>
+                  </div>
+                </div>
+                <div className='flex justify-between p-4 basis-3/12 '>
+                  <div className='flex w-full flex-col mt-3'>
+                    <p className='text-sm font-normal text mb-2'>Type<span className='text-red-600'>*</span></p>
+                    <WebtraxSelect  name="workOrderType" options={WorkOrderOptions} value={workOrderType} onChange={(val) => setWorkOrderType(val)} />
+                  </div>
+                </div>
+                <div className='flex justify-between p-4 basis-3/12 '>
+                  <div className='flex w-full flex-col mt-3'>
+                    <p className='text-sm font-normal text mb-2'>Terms<span className='text-red-600'>*</span></p>
+                    <WebtraxSelect  name="workOrderTerms" options={TermsOptions} value={termValue} onChange={(val) => setTermValue(val)} />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -71,9 +114,9 @@ export default function WorkOrderModal({
         </div>
       </div>
       {/* below form is for closing modal when user clicks in backdrop */}
-      <form method="dialog" className="modal-backdrop">
+      {/* <form method="dialog" className="modal-backdrop">
         <button>close</button>
-      </form>
-    </dialog>
+      </form> */}
+    </Modal>
   );
 }

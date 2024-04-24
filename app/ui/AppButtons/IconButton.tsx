@@ -18,7 +18,7 @@ export default function IconButton({
   return (
     <button
       className={clsx(
-        'btn flex h-14 w-48 items-center rounded-lg p-4',
+        'btn flex items-center rounded-lg',
         className,
       )}
       {...rest}
